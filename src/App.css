@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.grid-display {
+  display: flex;
+  justify-content: space-between;
+}
+
+.game-info {
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+}
+
+.game-info button {
+  margin-bottom: 1rem;
+}
