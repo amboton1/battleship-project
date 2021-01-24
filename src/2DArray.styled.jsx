@@ -5,23 +5,46 @@ export const Container = styled.div`
     margin: 0 auto;
 `;
 
-export const Grid = styled.tbody`
-    border: 1px solid #b4b4ff;
-    display: table;
+export const BoardGrid = styled.div`
+   height: ${props => props.size || '100%'};
+   width: ${props => props.size || '100%'};
+   border-right: 1px solid;
+   border-bottom: 1px solid;
+   box-sizing: border-box;
+   ${props => props.gridPosition || '' }
+   margin-top: 10px;
+   display: grid;
+   grid-template-columns: repeat(11, 1fr);
+   grid-template-rows: repeat(11, 1fr);
+
+   @media (max-width: 768px) {
+       max-width: 100%;
+   }
 `;
 
-export const Row = styled.tr`
-    display: flex;
-    flex-wrap: wrap;
+export const ColumnLabels = styled.div`
+  grid-row: 1 / span 1;
+  grid-column: 2 / span 10;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
 `;
 
-export const Col = styled.td`
-    border: 1px solid #b4b4ff;
-    background-color: ${(props) => props.color};
-    padding: 1rem;
-    flex: ${(props) => props.size};
+export const RowLabels = styled.div`
+  grid-row: 2 / span 10;
+  grid-column: 1 / span 1;
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+`;
 
-    &:hover {
-        background-color: aliceblue;
-    }
+export const Square = styled.div`
+  border-top: 1px solid;
+  border-left: 1px solid;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: aliceblue;
+  }
 `;

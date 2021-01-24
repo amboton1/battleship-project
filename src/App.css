@@ -51,3 +51,9 @@
 .game-info button {
   margin-bottom: 1rem;
 }
+
+@media (max-width: 768px) {
+  .grid-display {
+    flex-direction: column;
+  }
+}
