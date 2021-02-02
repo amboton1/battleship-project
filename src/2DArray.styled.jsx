@@ -14,26 +14,12 @@ export const BoardGrid = styled.div`
    ${props => props.gridPosition || '' }
    margin-top: 10px;
    display: grid;
-   grid-template-columns: repeat(11, 1fr);
-   grid-template-rows: repeat(11, 1fr);
+   grid-template-columns: repeat(10, 1fr);
+   grid-template-rows: repeat(10, 1fr);
 
    @media (max-width: 768px) {
        max-width: 100%;
    }
-`;
-
-export const ColumnLabels = styled.div`
-  grid-row: 1 / span 1;
-  grid-column: 2 / span 10;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-`;
-
-export const RowLabels = styled.div`
-  grid-row: 2 / span 10;
-  grid-column: 1 / span 1;
-  display: grid;
-  grid-template-rows: repeat(10, 1fr);
 `;
 
 export const Square = styled.div`
