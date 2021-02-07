@@ -59,7 +59,6 @@ const fillShipsCoordinates = () => {
     const smjer = getDirection(pocetnaRandomPozicija, ship.size);
 
     for (let index = 0; index < ship.size; index++) {
-      if (ship.coordinates.includes(smjer)) pocetnaRandomPozicija = Math.floor(Math.random() * 100);
       ship.coordinates.push(pocetnaRandomPozicija)
       pocetnaRandomPozicija += smjer
     }
