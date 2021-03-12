@@ -1,37 +1,3 @@
-/* eslint-disable no-loop-func */
-//ships
-export const shipArray = [
-    {
-      name: 'destroyer',
-      size: 2,
-      class: 'red',
-      coordinates: []
-    }, 
-    {
-      name: 'submarine',
-      size: 3,
-      class: 'purple',
-      coordinates: []
-    },
-    {
-      name: 'cruiser',
-      size: 3,
-      class: 'purple',
-      coordinates: []
-    },
-    {
-      name: 'battleship',
-      size: 4,
-      class: 'green',
-      coordinates: []
-    },
-    {
-      name: 'carrier',
-      size: 5,
-      class: 'yellow',
-      coordinates: []
-    },
-]
 const getDirection = (pocetna, size) => {
   // get direction - 0 vertical, 1 horizontal
   let direction = Math.floor(Math.random() * 2)
@@ -53,13 +19,26 @@ const getDirection = (pocetna, size) => {
   return direction;
 }
 
+const checkColisionCondition = (ship, coordinate) => {
+  if (ship.coordinates.includes(coordinate) ||
+      ship.coordinates.includes(coordinate + 1) ||
+      ship.coordinates.includes(coordinate - 1) ||
+      ship.coordinates.includes(coordinate + 10) ||
+      ship.coordinates.includes(coordinate - 10) ||
+      ship.coordinates.includes(coordinate - 10 - 1) ||
+      ship.coordinates.includes(coordinate - 10 + 1) ||
+      ship.coordinates.includes(coordinate + 10 - 1) ||
+      ship.coordinates.includes(coordinate + 10 + 1)) {
+      return true;
+  }
+}
 
-const isColision = (coordinate) => {
+const isColision = (coordinate, shipArray) => {
   let result = false;
-  for (let i = 0; i < shipArray.length; i++) {
-    const ship = shipArray[i];
+  for (const shipElement of shipArray) {
+    const ship = shipElement;
 
-    if (ship.coordinates.includes(coordinate) || ship.coordinates.includes(coordinate + 1) || ship.coordinates.includes(coordinate - 1) || ship.coordinates.includes(coordinate + 10) || ship.coordinates.includes(coordinate - 10)) {
+    if (checkColisionCondition(ship, coordinate)) {
       result = true;
       break;
     }
@@ -67,8 +46,7 @@ const isColision = (coordinate) => {
   return result;
 }
 
-
-const fillShipsCoordinates = () => {
+export const fillShipsCoordinates = (shipArray) => {
   shipArray.forEach((ship) => {
     let tempCoordinates = [];
     let doWork = true;
@@ -78,7 +56,7 @@ const fillShipsCoordinates = () => {
       let direction = getDirection(coordinate, ship.size);
 
       for (let i = 0; i < ship.size; i++) {
-        if (isColision(coordinate)) {
+        if (isColision(coordinate, shipArray)) {
           tempCoordinates = [];
           break;
         }
@@ -94,5 +72,3 @@ const fillShipsCoordinates = () => {
     ship.coordinates.push(...tempCoordinates);
   })
 }
-
-fillShipsCoordinates()
