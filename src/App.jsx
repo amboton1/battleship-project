@@ -51,8 +51,11 @@ const App = () => {
     generateShips();
   }, [])
 
-  const generateMap = () => {
-    return mapa.map((color, index) => <Square style={{ backgroundColor: color }} key={index} /> )
+  const generateGrid = () => {
+    return mapa.map((color, index) => color
+      ? <Square style={{ backgroundColor: color }} key={index} />
+      : <Square key={index} />
+    )
   }
 
   const generateShips = () => {
@@ -66,7 +69,7 @@ const App = () => {
   }
 
   const regenerate = () => {
-    setMapa(tempArray);
+    generateShips();
   }
 
   return (
@@ -74,7 +77,7 @@ const App = () => {
       <h1>Battlefield Game</h1>
       <div className="grid-display">
         <BoardGrid size="600px">
-          { generateMap() }
+          {generateGrid()}
         </BoardGrid>
         <div className="buttons-container">
           <button onClick={regenerate} className="regenerate-btn">Regenerate</button>
