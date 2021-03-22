@@ -3,52 +3,31 @@ import './App.css';
 import { Container,  BoardGrid, Square } from './2DArray.styled';
 import { fillShipsCoordinates } from './renderCoordinates.helpers';
 import { size } from './constants/constants';
+import Peer from 'peerjs';
 
 const App = () => {
   const [mapa, setMapa] = useState(new Array(size * size).fill(0));
   let tempArray = new Array(size * size).fill(0);
 
-  const shipArray = [
-    {
-      name: 'destroyer',
-      size: 2,
-      class: 'red',
-      coordinates: []
-    },
-    {
-      name: 'destroyer',
-      size: 2,
-      class: 'red',
-      coordinates: []
-    },
-    {
-      name: 'submarine',
-      size: 3,
-      class: 'purple',
-      coordinates: []
-    },
-    {
-      name: 'cruiser',
-      size: 3,
-      class: 'purple',
-      coordinates: []
-    },
-    {
-      name: 'battleship',
-      size: 4,
-      class: 'green',
-      coordinates: []
-    },
-    {
-      name: 'carrier',
-      size: 5,
-      class: 'yellow',
-      coordinates: []
-    },
-  ]
-
   useEffect(() => {
     generateShips();
+
+    const peerReceiver = new Peer('receiver', { host: 'localhost', port: 9000, path: '/' })
+
+    peerReceiver.on('connection', (conn) => {
+      conn.on('data', (data) => {
+        console.log(data);
+      })
+    })
+
+    const senderPeer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
+
+    const connection = senderPeer.connect('receiver');
+
+    connection.on('open', () => {
+      connection.send('pozdrav mentore!');
+    });
+
   }, [])
 
   const generateGrid = () => {
@@ -59,9 +38,9 @@ const App = () => {
   }
 
   const generateShips = () => {
-    fillShipsCoordinates(shipArray);
+    const ships = fillShipsCoordinates();
 
-    shipArray.forEach((ship) => ship.coordinates.forEach(coordinates => {
+    ships.forEach((ship) => ship.coordinates.forEach(coordinates => {
       tempArray[coordinates] = ship.class;
     }))
 
