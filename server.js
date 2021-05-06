@@ -21,5 +21,6 @@ app.get("/", (request, response) => {
     response.sendFile(__dirname + "/index.html");
 });
 
-server.listen(port);
-console.log('Listening on: ' + port);
+server.listen(port, () => {
+    console.log('Listening on: ' + port);
+});
