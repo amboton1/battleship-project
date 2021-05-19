@@ -1,3 +1,5 @@
+import { shipArray } from "./constants/constants"
+
 const getDirection = (pocetna, size) => {
   // get direction - 0 vertical, 1 horizontal
   let direction = Math.floor(Math.random() * 2)
@@ -47,46 +49,9 @@ const isColision = (coordinate, shipArray) => {
 }
 
 export const fillShipsCoordinates = () => {
-  const shipArray = [
-    {
-      name: 'destroyer',
-      size: 2,
-      class: 'red',
-      coordinates: []
-    },
-    {
-      name: 'destroyer',
-      size: 2,
-      class: 'red',
-      coordinates: []
-    },
-    {
-      name: 'submarine',
-      size: 3,
-      class: 'purple',
-      coordinates: []
-    },
-    {
-      name: 'cruiser',
-      size: 3,
-      class: 'purple',
-      coordinates: []
-    },
-    {
-      name: 'battleship',
-      size: 4,
-      class: 'green',
-      coordinates: []
-    },
-    {
-      name: 'carrier',
-      size: 5,
-      class: 'yellow',
-      coordinates: []
-    },
-  ]
+  let temp = JSON.parse(JSON.stringify(shipArray))
 
-  shipArray.forEach((ship) => {
+  temp.forEach((ship) => {
     let tempCoordinates = [];
     let doWork = true;
 
@@ -95,7 +60,7 @@ export const fillShipsCoordinates = () => {
       let direction = getDirection(coordinate, ship.size);
 
       for (let i = 0; i < ship.size; i++) {
-        if (isColision(coordinate, shipArray)) {
+        if (isColision(coordinate, temp)) {
           tempCoordinates = [];
           break;
         }
@@ -103,12 +68,10 @@ export const fillShipsCoordinates = () => {
         tempCoordinates.push(coordinate);
         coordinate += direction;
 
-        if (tempCoordinates.length === ship.size) {
-          doWork = false;
-        }
+        doWork = !(tempCoordinates.length === ship.size)
       }
     }
     ship.coordinates.push(...tempCoordinates);
   })
-  return shipArray;
+  return temp;
 }

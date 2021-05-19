@@ -47,10 +47,6 @@ const App = () => {
     setMapa(tempArray);
   }
 
-  const regenerate = () => {
-    generateShips();
-  }
-
   return (
     <Container>
       <h1>Battlefield Game</h1>
@@ -59,7 +55,7 @@ const App = () => {
           {generateGrid()}
         </BoardGrid>
         <div className="buttons-container">
-          <button onClick={regenerate} className="regenerate-btn">Regenerate</button>
+          <button onClick={generateShips} className="regenerate-btn">Regenerate</button>
           <button className="find-new-game">Find New Game</button>
         </div>
       </div>
