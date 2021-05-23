@@ -4,6 +4,7 @@ import { Container,  BoardGrid, Square } from './2DArray.styled';
 import { fillShipsCoordinates } from './renderCoordinates.helpers';
 import { size } from './constants/constants';
 import Peer from 'peerjs';
+import axios from 'axios';
 
 const App = () => {
   const [mapa, setMapa] = useState(new Array(size * size).fill(0));
@@ -12,21 +13,17 @@ const App = () => {
   useEffect(() => {
     generateShips();
 
-    const peerReceiver = new Peer('receiver', { host: 'localhost', port: 9000, path: '/' })
-
-    peerReceiver.on('connection', (conn) => {
-      conn.on('data', (data) => {
-        console.log(data);
-      })
-    })
-
-    const senderPeer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
-
-    const connection = senderPeer.connect('receiver');
-
-    connection.on('open', () => {
-      connection.send('pozdrav mentore!');
+    let peer = new Peer('testId', {
+      host: window.location.hostname,
+      port: window.location.port || (window.location.protocol === 'https:' ? 443 : 80),
+      path: '/peerjs'
     });
+
+     axios.post(`http://localhost:8000/receive`, peer.id)
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
 
   }, [])
 
