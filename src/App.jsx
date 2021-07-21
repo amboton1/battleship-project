@@ -13,17 +13,19 @@ const App = () => {
   useEffect(() => {
     generateShips();
 
+    // kreiraj peer objekt
     let peer = new Peer('testId', {
       host: window.location.hostname,
       port: window.location.port || (window.location.protocol === 'https:' ? 443 : 80),
       path: '/peerjs'
     });
 
-     axios.post(`http://localhost:8000/receive`, peer.id)
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
+    // pošalji peer id
+    axios.post(`http://localhost:8000/receive`, peer.id)
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
 
   }, [])
 

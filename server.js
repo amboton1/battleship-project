@@ -22,15 +22,24 @@ app.get("/", (request, response) => {
     response.sendFile(__dirname + "/index.html");
 });
 
-app.post('/receive', function(request, respond) {
+app.post('/receive', (request, respond) => {
     var body = '';
-    const filePath = __dirname + '/public/data.txt';
+    const filePath = __dirname + '/public/userId.txt';
+    let fileContent = '';
 
-    request.on('data', function(data) {
+    fs.readFile(filePath, 'utf8' , (err, data) => {
+        if (err) {
+            console.error(err)
+            return;
+        }
+        fileContent = data;
+    })
+
+    request.on('data', (data) => {
         body += data;
     });
 
-    request.on('end', function (){
+    request.on('end', () => {
         fs.appendFile(filePath, body, function() {
             respond.end();
         });
