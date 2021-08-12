@@ -20,10 +20,9 @@ const App = () => {
       path: '/peerjs'
     });
 
-    // pošalji peer id
-    axios.post(`http://localhost:8000/receive`, peer.id)
+    // send peer id, todo: promjeniti u get
+    axios.post(`http://localhost:8000/receive`)
     .then(res => {
-      console.log(res);
       console.log(res.data);
     })
 
