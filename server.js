@@ -52,19 +52,22 @@ swtich(result.status) {
     
  */
 app.post('/receive', (request, respond) => {
-    var id = 'testId';
     const filePath = __dirname + '/public/userId.txt';
+    let id = '';
 
-    // create empty file
-    fs.appendFile(filePath, '', () => {
-        // respond.end();
+    request.on('data', (data) => {
+        id += data;
     });
+
+    // check if file exists
+    fs.appendFileSync(filePath, '');
 
     fs.readFile(filePath, 'utf8' , (err, data) => {
         if (err) {
             console.error(err);
             return;
         }
+
         if (data.length === 0) {
             // ako ne postoji ništa, upiši ID u file i vrati response waiting
             fs.appendFile(filePath, id, () => {
@@ -72,12 +75,10 @@ app.post('/receive', (request, respond) => {
             });
         } else {
             // ako postoji, onda učitaj, izbriši iz fajla i vrati success + id
-            fs.readFile(filePath, 'utf8' , (err, data) => {
-                fs.writeFile(filePath, '', () => {
-                    // respond.end();
-                });
-                respond.end(`{ status: 'success', ID: ${data} }`);
-            })
+            fs.writeFile(filePath, '', () => {
+                // respond.end();
+            });
+            respond.end(`{ status: 'success', ID: ${data} }`);
         }
     })
 });

@@ -21,8 +21,7 @@ const App = () => {
     });
 
     // send peer id, todo: promjeniti u get
-    axios.post(`http://localhost:8000/receive`)
-    .then(res => {
+    axios.post(`http://localhost:8000/receive`, peer.id).then(res => {
       console.log(res.data);
     })
 
