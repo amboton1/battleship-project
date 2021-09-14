@@ -75,10 +75,8 @@ app.post('/receive', (request, respond) => {
             });
         } else {
             // ako postoji, onda učitaj, izbriši iz fajla i vrati success + id
-            fs.writeFile(filePath, '', () => {
-                // respond.end();
-            });
             respond.end(`{ status: 'success', ID: ${data} }`);
+            fs.truncate(filePath, () => {});
         }
     })
 });
