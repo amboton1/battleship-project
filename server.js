@@ -71,11 +71,11 @@ app.post('/receive', (request, respond) => {
         if (data.length === 0) {
             // ako ne postoji ništa, upiši ID u file i vrati response waiting
             fs.appendFile(filePath, id, () => {
-                respond.end(`{ status: 'waiting', ID: ${id} }`);
+                respond.end(`{ "status": "waiting", "ID": "${id}" }`);
             });
         } else {
             // ako postoji, onda učitaj, izbriši iz fajla i vrati success + id
-            respond.end(`{ status: 'success', ID: ${data} }`);
+            respond.end(`{ "status": "success", "ID": "${data}" }`);
             fs.truncate(filePath, () => {});
         }
     })
