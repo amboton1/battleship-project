@@ -6,7 +6,6 @@
 .pnp.js
 .history/
 /public/data.txt
-.eslintcache
 
 # testing
 /coverage
