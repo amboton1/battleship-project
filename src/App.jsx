@@ -8,24 +8,43 @@ import axios from 'axios';
 
 const App = () => {
   const [mapa, setMapa] = useState(new Array(size * size).fill(0));
+  const [gameStatus, setGameStatus] = useState(null);
   let tempArray = new Array(size * size).fill(0);
 
   useEffect(() => {
     generateShips();
 
     // kreiraj peer objekt
-    let peer = new Peer('testId', {
-      host: window.location.hostname,
-      port: window.location.port || (window.location.protocol === 'https:' ? 443 : 80),
-      path: '/peerjs'
+    let peer = new Peer();
+
+    peer.on('open', (id) => {
+      // send peer id, todo: promjeniti u get
+      axios.post(`http://localhost:8000/receive`, peer.id).then(res => {
+        console.log(res.data);
+
+        retreiveGameStatus(res.data.status);
+      })
     });
 
-    // send peer id, todo: promjeniti u get
-    axios.post(`http://localhost:8000/receive`, peer.id).then(res => {
-      console.log(res.data);
-    })
+    return () => {
+      peer.destroy();
+    };
 
   }, [])
+
+
+  const retreiveGameStatus = (status) => {
+    switch (status) {
+      case 'success':
+        setGameStatus({ wating: false, active: true});
+        break;
+      case 'waiting':
+        setGameStatus({ wating: true, active: false});
+        break;
+      default:
+        break;
+    }
+  }
 
   const generateGrid = () => {
     return mapa.map((color, index) => color
