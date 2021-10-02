@@ -8,41 +8,54 @@ import axios from 'axios';
 
 const App = () => {
   const [mapa, setMapa] = useState(new Array(size * size).fill(0));
-  const [gameStatus, setGameStatus] = useState(null);
   let tempArray = new Array(size * size).fill(0);
+  
+  // kreiraj peer objekt
+  let peer = new Peer();
 
   useEffect(() => {
     generateShips();
 
-    // kreiraj peer objekt
-    let peer = new Peer();
-
-    peer.on('open', (id) => {
+    peer.on('open', () => {
       // send peer id, todo: promjeniti u get
       axios.post(`http://localhost:8000/receive`, peer.id).then(res => {
         console.log(res.data);
 
-        retreiveGameStatus(res.data.status);
+        const game = retreiveGameStatus(res.data.status);
+        
+        settingPeerConnection(game);
       })
     });
 
     return () => {
       peer.destroy();
-    };
-
+    }
   }, [])
-
 
   const retreiveGameStatus = (status) => {
     switch (status) {
       case 'success':
-        setGameStatus({ wating: false, active: true});
-        break;
+        return ({ wating: false, active: true});
       case 'waiting':
-        setGameStatus({ wating: true, active: false});
-        break;
+        return ({ wating: true, active: false});
       default:
         break;
+    }
+  }
+
+  const settingPeerConnection = (game) => {
+    // setup peer connection
+    let connection = peer.connect(peer.id);
+
+    if (game?.active) {
+      console.log('game status: ', game.active);
+      console.log('active connection', connection)
+    }
+
+    if (game?.wating) {
+      peer.on('connection', (conn) => {
+        console.log('CONNECTION:', conn);  
+      });
     }
   }
 
