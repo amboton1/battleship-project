@@ -35,9 +35,9 @@ const App = () => {
   const retreiveGameStatus = (status) => {
     switch (status) {
       case 'success':
-        return ({ wating: false, active: true});
+        return ({ waiting: false, active: true});
       case 'waiting':
-        return ({ wating: true, active: false});
+        return ({ waiting: true, active: false});
       default:
         break;
     }
@@ -52,7 +52,7 @@ const App = () => {
       console.log('active connection', connection)
     }
 
-    if (game?.wating) {
+    if (game?.waiting) {
       peer.on('connection', (conn) => {
         console.log('CONNECTION:', conn);  
       });
