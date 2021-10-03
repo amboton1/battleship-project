@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Container,  BoardGrid, Square } from './2DArray.styled';
 import { fillShipsCoordinates } from './renderCoordinates.helpers';
-import { size } from './constants/constants';
+import { size, statuses } from './constants/constants';
 import Peer from 'peerjs';
-import axios from 'axios';
 
 const App = () => {
   const [mapa, setMapa] = useState(new Array(size * size).fill(0));
@@ -16,15 +15,14 @@ const App = () => {
   useEffect(() => {
     generateShips();
 
-    peer.on('open', () => {
+    peer.on('open', async () => {
       // send peer id, todo: promjeniti u get
-      axios.post(`http://localhost:8000/receive`, peer.id).then(res => {
-        console.log(res.data);
+      const fetchedResult = await fetch('http://localhost:8000/receive', { method: 'POST', body: peer.id });
+      const statusResult = await fetchedResult.json();
 
-        const game = retreiveGameStatus(res.data.status);
-        
-        settingPeerConnection(game);
-      })
+      const game = retreiveGameStatus(statusResult.status);
+
+      settingPeerConnection(game);
     });
 
     return () => {
@@ -34,9 +32,9 @@ const App = () => {
 
   const retreiveGameStatus = (status) => {
     switch (status) {
-      case 'success':
+      case statuses.ACTIVE:
         return ({ waiting: false, active: true});
-      case 'waiting':
+      case statuses.WAITING:
         return ({ waiting: true, active: false});
       default:
         break;
@@ -48,8 +46,8 @@ const App = () => {
     let connection = peer.connect(peer.id);
 
     if (game?.active) {
-      console.log('game status: ', game.active);
-      console.log('active connection', connection)
+        console.log('game status: ', game.active);
+        console.log('active connection', connection)
     }
 
     if (game?.waiting) {
