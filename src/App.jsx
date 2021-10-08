@@ -17,10 +17,10 @@ const App = () => {
 
     peer.on('open', async () => {
       // send peer id, todo: promjeniti u get
-      const fetchedResult = await fetch('http://localhost:8000/receive', { method: 'POST', body: peer.id });
-      const statusResult = await fetchedResult.json();
+      const status = await fetchStatus(peer);
+      const statusObject = await status.json();
 
-      const game = retreiveGameStatus(statusResult.status);
+      const game = retreiveGameStatus(statusObject.status);
 
       settingPeerConnection(game);
     });
@@ -29,6 +29,10 @@ const App = () => {
       peer.destroy();
     }
   }, [])
+
+  const fetchStatus = (peer) => {
+    return fetch('http://localhost:8000/receive', { method: 'POST', body: peer.id });
+  }
 
   const retreiveGameStatus = (status) => {
     switch (status) {
