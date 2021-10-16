@@ -38,3 +38,8 @@ export const shipArray = [
       coordinates: []
     },
   ]
+
+export const statuses = {
+  WAITING: 'waiting',
+  ACTIVE: 'success'
+}

@@ -76,7 +76,7 @@ app.post('/receive', (request, respond) => {
         } else {
             // ako postoji, onda učitaj, izbriši iz fajla i vrati success + id
             respond.end(`{ "status": "success", "ID": "${data}" }`);
-            fs.truncate(filePath, () => {});
+            fs.unlink(filePath, () => {});
         }
     })
 });
