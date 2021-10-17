@@ -7,6 +7,7 @@ import Peer from 'peerjs';
 
 const App = () => {
   const [mapa, setMapa] = useState(new Array(size * size).fill(0));
+  const [opponentsMap, setOpponentsMap] = useState(new Array(size * size).fill());
   let tempArray = new Array(size * size).fill(0);
   
   // kreiraj peer objekt
@@ -62,17 +63,19 @@ const App = () => {
   }
 
   const generateGrid = () => {
-    return mapa.map((color, index) => color
-      ? <Square style={{ backgroundColor: color }} key={index} />
-      : <Square key={index} />
+    return mapa.map((number, index) => number
+      ? <Square style={{ fontWeight: 'bold' }} key={index}>{number}</Square>
+      : <Square key={index}>0</Square>
     )
   }
+
+  const generateOpponentsGrid = () => opponentsMap.map((square, index) => <Square key={index}>{square}</Square>)
 
   const generateShips = () => {
     const ships = fillShipsCoordinates();
 
     ships.forEach((ship) => ship.coordinates.forEach(coordinates => {
-      tempArray[coordinates] = ship.class;
+      tempArray[coordinates] = 1;
     }))
 
     setMapa(tempArray);
@@ -85,9 +88,13 @@ const App = () => {
         <BoardGrid size="600px">
           {generateGrid()}
         </BoardGrid>
-        <div className="buttons-container">
+        <div className="buttons-grid-container">
           <button onClick={generateShips} className="regenerate-btn">Regenerate</button>
           <button className="find-new-game">Find New Game</button>
+          <h2>OPPONENTS GRID</h2>
+          <BoardGrid size="300px">
+            {generateOpponentsGrid()}
+          </BoardGrid>
         </div>
       </div>
     </Container>
