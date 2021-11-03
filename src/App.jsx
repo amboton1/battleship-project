@@ -8,14 +8,23 @@ import Peer from 'peerjs';
 const App = () => {
   const [mapa, setMapa] = useState(new Array(size * size).fill(0));
   const [opponentsMap, setOpponentsMap] = useState(new Array(size * size).fill());
+  const [peer, setPeer] = useState(null);
   let tempArray = new Array(size * size).fill(0);
-  
-  // kreiraj peer objekt
-  let peer = null;
 
   useEffect(() => {
     generateShips();
   }, []);
+
+  useEffect(() => {
+    return peer?.on('open', async () => {
+      // send peer id, todo: promjeniti u get
+      const status = await fetchStatus(peer);
+      const statusObject = await status.json();
+      const game = retreiveGameStatus(statusObject.status);
+
+      settingPeerConnection(game);
+    });
+  }, [peer])
 
   const fetchStatus = (peer) => {
     return fetch('http://localhost:8000/receive', { method: 'POST', body: peer.id });
@@ -68,18 +77,7 @@ const App = () => {
     setMapa(tempArray);
   }
 
-  const findNewGame = () => {
-    peer = new Peer();
-
-    return peer.on('open', async () => {
-      // send peer id, todo: promjeniti u get
-      const status = await fetchStatus(peer);
-      const statusObject = await status.json();
-      const game = retreiveGameStatus(statusObject.status);
-
-      settingPeerConnection(game);
-    });
-  }
+  const findNewGame = () => setPeer(new Peer());
 
   return (
     <Container>
