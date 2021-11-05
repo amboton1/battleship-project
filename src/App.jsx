@@ -16,7 +16,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    return peer?.on('open', async () => {
+    peer?.on('open', async () => {
       // send peer id, todo: promjeniti u get
       const status = await fetchStatus(peer);
       const statusObject = await status.json();
@@ -49,6 +49,7 @@ const App = () => {
     if (game?.active) {
         console.log('game status: ', game.active);
         console.log('active connection', connection)
+        alert('You have successfully connected to other peer!');
     }
 
     if (game?.waiting) {
