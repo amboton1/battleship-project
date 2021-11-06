@@ -8,28 +8,23 @@ import Peer from 'peerjs';
 const App = () => {
   const [mapa, setMapa] = useState(new Array(size * size).fill(0));
   const [opponentsMap, setOpponentsMap] = useState(new Array(size * size).fill());
+  const [peer, setPeer] = useState(null);
   let tempArray = new Array(size * size).fill(0);
-  
-  // kreiraj peer objekt
-  let peer = new Peer();
 
   useEffect(() => {
     generateShips();
+  }, []);
 
-    peer.on('open', async () => {
+  useEffect(() => {
+    peer?.on('open', async () => {
       // send peer id, todo: promjeniti u get
       const status = await fetchStatus(peer);
       const statusObject = await status.json();
-
       const game = retreiveGameStatus(statusObject.status);
 
       settingPeerConnection(game);
     });
-
-    return () => {
-      peer.destroy();
-    }
-  }, [])
+  }, [peer])
 
   const fetchStatus = (peer) => {
     return fetch('http://localhost:8000/receive', { method: 'POST', body: peer.id });
@@ -49,10 +44,12 @@ const App = () => {
   const settingPeerConnection = (game) => {
     // setup peer connection
     let connection = peer.connect(peer.id);
+    console.log('CONN: ', connection);
 
     if (game?.active) {
         console.log('game status: ', game.active);
         console.log('active connection', connection)
+        alert('You have successfully connected to other peer!');
     }
 
     if (game?.waiting) {
@@ -81,6 +78,8 @@ const App = () => {
     setMapa(tempArray);
   }
 
+  const findNewGame = () => setPeer(new Peer());
+
   return (
     <Container>
       <h1>Battlefield Game</h1>
@@ -90,7 +89,7 @@ const App = () => {
         </BoardGrid>
         <div className="buttons-grid-container">
           <button onClick={generateShips} className="regenerate-btn">Regenerate</button>
-          <button className="find-new-game">Find New Game</button>
+          <button onClick={findNewGame} className="find-new-game">Find New Game</button>
           <h2>OPPONENTS GRID</h2>
           <BoardGrid size="300px">
             {generateOpponentsGrid()}
