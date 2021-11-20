@@ -61,8 +61,8 @@ const App = () => {
 
   const generateGrid = () => {
     return mapa.map((number, index) => number
-      ? <Square style={{ fontWeight: 'bold' }} key={index}>{number}</Square>
-      : <Square key={index}>0</Square>
+      ? <Square style={{ fontWeight: 'bold' }} key={index} onClick={() => console.log('zaobilaznica pub 1')}>{number}</Square>
+      : <Square key={index} onClick={() => console.log('zaobilaznica pub 2')}>0</Square>
     )
   }
 
