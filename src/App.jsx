@@ -10,6 +10,7 @@ const App = () => {
   const [opponentsMap, setOpponentsMap] = useState(new Array(size * size).fill());
   const [peer, setPeer] = useState(null);
   let tempArray = new Array(size * size).fill(0);
+  let publish;
 
   useEffect(() => {
     generateShips();
@@ -20,9 +21,10 @@ const App = () => {
       // send peer id, todo: promjeniti u get
       const status = await fetchStatus(peer);
       const statusObject = await status.json();
-      const game = retreiveGameStatus(statusObject.status);
+      console.log(statusObject);
+      // const game = retreiveGameStatus(statusObject.status);
 
-      settingPeerConnection(game);
+      settingPeerConnection(statusObject);
     });
   }, [peer])
 
@@ -41,27 +43,52 @@ const App = () => {
     }
   }
 
-  const settingPeerConnection = (game) => {
+  const settingPeerConnection = (statusObject) => {
     // setup peer connection
-    let connection = peer.connect(peer.id);
+    const { ID1, ID2 } = statusObject;
+    console.log(ID1, ID2);
+    let connection = peer?.connect(ID1);
+    
     console.log('CONN: ', connection);
 
-    if (game?.active) {
+    publish = function (message) {
+      connection?.send(message);
+    };
+
+    peer.on('connection', function(conn) {
+      conn.on('data', function(data){
+        // Will print 'hi!'
+        console.log('hi data', data);
+      });
+    });
+
+    /* if (game?.active) {
         console.log('game status: ', game.active);
         console.log('active connection', connection)
         alert('You have successfully connected to other peer!');
+
+        peer.on('connection', function(conn) {
+          conn.on('data', function(data){
+            // Will print 'hi!'
+            console.log('hi data', data);
+          });
+        });
+    
+        publish = function (message) {
+          connection.send(message);
+        };
     }
 
     if (game?.waiting) {
       peer.on('connection', (conn) => {
         console.log('CONNECTION:', conn);  
       });
-    }
+    } */
   }
 
   const generateGrid = () => {
     return mapa.map((number, index) => number
-      ? <Square style={{ fontWeight: 'bold' }} key={index} onClick={() => console.log('zaobilaznica pub 1')}>{number}</Square>
+      ? <Square style={{ fontWeight: 'bold' }} key={index} onClick={() => publish && publish("Test test")}>{number}</Square>
       : <Square key={index} onClick={() => console.log('zaobilaznica pub 2')}>0</Square>
     )
   }

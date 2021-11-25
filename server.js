@@ -75,7 +75,10 @@ app.post('/receive', (request, respond) => {
             });
         } else {
             // ako postoji, onda učitaj, izbriši iz fajla i vrati success + id
-            respond.end(`{ "status": "success", "ID": "${data}" }`);
+            /* fs.appendFile(filePath, id, () => { */
+                respond.end(`{ "status": "success", "ID1": "${data}", "ID2": "${id}" }`);
+            /* }); */
+            /* respond.end(`{ "status": "success", "ID": "${data}" }`); */
             fs.unlink(filePath, () => {});
         }
     })
